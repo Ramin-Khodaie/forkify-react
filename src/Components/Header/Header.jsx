@@ -2,38 +2,50 @@ import "./Header.scss";
 import Logo from "../../img/logo.png";
 
 import { BiBookmark, BiEdit, BiSearch } from "react-icons/bi";
+import { useState } from "react";
+import Modal from "../Modal/Modal";
+import AddRecipe from "../AddRecipe/AddRecipe";
 
 const Header = ({ searchitem, onChange, submit }) => {
+  const [state, setState] = useState({ show: false });
+
+  const handleBackdrop = () => {
+    setState({ ...state, show: !state.show });
+  };
   return (
-    <header className="header">
-      <img src={Logo} alt="Logo" className="header__logo" />
-      <form class="search" onSubmit={submit}>
-        <input
-          type="text"
-          className="search__field"
-          placeholder="Search over 1,000,000 recipes..."
-          value={searchitem}
-          onChange={onChange}
-        />
-        <button className="btn search__btn">
-          <BiSearch className="search_icon" />
-          <span>Search</span>
-        </button>
-      </form>
-      <nav className="nav">
-        <ul className="nav__list">
-          <li className="nav__item">
-            <button className="nav__btn nav__btn--add-recipe">
-              <BiEdit className="nav__icon" />
-              <span>Add recipe</span>
-            </button>
-          </li>
-          <li className="nav__item">
-            <button className="nav__btn nav__btn--bookmarks">
-              <BiBookmark className="nav__icon" />
-              <span>Bookmarks</span>
-            </button>
-            {/* <div class="bookmarks">
+    <>
+      <header className="header">
+        <img src={Logo} alt="Logo" className="header__logo" />
+        <form class="search" onSubmit={submit}>
+          <input
+            type="text"
+            className="search__field"
+            placeholder="Search over 1,000,000 recipes..."
+            value={searchitem}
+            onChange={onChange}
+          />
+          <button className="btn search__btn">
+            <BiSearch className="search_icon" />
+            <span>Search</span>
+          </button>
+        </form>
+        <nav className="nav">
+          <ul className="nav__list">
+            <li className="nav__item">
+              <button
+                className="nav__btn nav__btn--add-recipe"
+                onClick={handleBackdrop}
+              >
+                <BiEdit className="nav__icon" />
+                <span>Add recipe</span>
+              </button>
+            </li>
+            <li className="nav__item">
+              <button className="nav__btn nav__btn--bookmarks">
+                <BiBookmark className="nav__icon" />
+                <span>Bookmarks</span>
+              </button>
+              {/* <div class="bookmarks">
                 <ul class="bookmarks__list">
                   <div class="message">
                     <div>
@@ -61,10 +73,16 @@ const Header = ({ searchitem, onChange, submit }) => {
                   </li> -->
                 </ul>
               </div> */}
-          </li>
-        </ul>
-      </nav>
-    </header>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      {state.show && (
+        <Modal show={state.show} closeBachdrops={handleBackdrop}>
+          <AddRecipe showForms={state.show} closeForm={handleBackdrop} />
+        </Modal>
+      )}
+    </>
   );
 };
 

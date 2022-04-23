@@ -6,6 +6,9 @@ const RecipeItems = ({ recipes, onChangeRecipe }) => {
     onChangeRecipe(id);
   };
 
+
+//TODO: RecipeItem component should render inside loop instead of li lists
+
   return (
     <div className="search-results">
       <ul class="results">
