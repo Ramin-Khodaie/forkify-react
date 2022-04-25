@@ -5,12 +5,19 @@ import { BiBookmark, BiEdit, BiSearch } from "react-icons/bi";
 import { useState } from "react";
 import Modal from "../Modal/Modal";
 import AddRecipe from "../AddRecipe/AddRecipe";
+import Bookmark from "../Bookmark/Bookmark";
 
 const Header = ({ searchitem, onChange, submit }) => {
-  const [state, setState] = useState({ show: false });
+  const [state, setState] = useState({
+    showAddForm: false,
+    showBookmark: false,
+  });
 
   const handleBackdrop = () => {
-    setState({ ...state, show: !state.show });
+    setState({ ...state, showAddForm: !state.showAddForm });
+  };
+  const handleShowBookmark = () => {
+    setState({ ...state, showBookmark: !state.showBookmark });
   };
   return (
     <>
@@ -41,7 +48,10 @@ const Header = ({ searchitem, onChange, submit }) => {
               </button>
             </li>
             <li className="nav__item">
-              <button className="nav__btn nav__btn--bookmarks">
+              <button
+                className="nav__btn nav__btn--bookmarks"
+                onClick={handleShowBookmark}
+              >
                 <BiBookmark className="nav__icon" />
                 <span>Bookmarks</span>
               </button>
@@ -77,9 +87,10 @@ const Header = ({ searchitem, onChange, submit }) => {
           </ul>
         </nav>
       </header>
-      {state.show && (
-        <Modal show={state.show} closeBachdrops={handleBackdrop}>
-          <AddRecipe showForms={state.show} closeForm={handleBackdrop} />
+      {state.showBookmark && <Bookmark />}
+      {state.showAddForm && (
+        <Modal show={state.showAddForm} closeBachdrops={handleBackdrop}>
+          <AddRecipe showForms={state.showAddForm} closeForm={handleBackdrop} />
         </Modal>
       )}
     </>
