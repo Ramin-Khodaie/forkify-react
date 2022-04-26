@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.scss';
 import Header from './Components/Header/Header';
 import { bxios } from './axiosConfig'
@@ -7,11 +7,23 @@ import RecipeItems from './Components/RecipeItems/RecipeItems';
 import ShowMessage from './Components/Message/ShowMessage'
 import RecipeDetail from './Components/RecipeDetail/RecipeDetail';
 import { AiOutlineWarning } from 'react-icons/ai';
+import Pagination from './Components/Pagination/Pagination';
 
 function App() {
 
-  const [state, setState] = useState({ searchItem: "", recipes: undefined, isLoading: false, message: "", singleRecipe: undefined })
+  const [state, setState] = useState({
+    searchItem: "",
+    recipes: undefined,
+    isLoading: false,
+    message: "",
+    singleRecipe: undefined,
+    bookmarks: [],
+    currentPage: 1,
+    totalPages: undefined,
+    paginatedData: undefined
+  })
 
+  let itemPerPages = 10;
   const handleChangeSearch = (e) => {
     setState({ ...state, searchItem: e.target.value })
   }
@@ -24,14 +36,18 @@ function App() {
     setState({ ...state, isLoading: true, message: "" })
     bxios.get(`/search?q=${state.searchItem}`).then(d => {
       if (d.status === 200) {
-        setState({ ...state, searchItem: "", recipes: d.data.recipes, isLoading: false })
+        const { count } = d.data
+        const totalPages = Math.ceil(count / itemPerPages);
+        setState({
+          ...state,
+          searchItem: "",
+          recipes: d.data.recipes,
+          isLoading: false,
+          totalPages: totalPages,
+        })
         return;
       }
-      // if (d.status === 400) {
-
-      // }
     }).catch(err => {
-      console.log(444, err.response);
       setState({
         ...state, isLoading: false,
         message: "We could not find any result for your query, please try again :)"
@@ -46,19 +62,61 @@ function App() {
       setState({ ...state, singleRecipe: e })
     }
   }
+
+  const handleIncrease = () => {
+    const tmpPage = state.currentPage + 1
+    setState({ ...state, currentPage: tmpPage })
+
+  }
+  const handleDecrease = () => {
+    const tmpPage = state.currentPage - 1
+    setState({ ...state, currentPage: tmpPage })
+  }
+  const addBookmark = (bookmark) => {
+    setState({ ...state, bookmarks: [...state.bookmarks, bookmark] })
+  }
+
+  const getRecipePerPage = () => {
+
+    let tmpArr = []
+    let slicedRecipes = {};
+
+    if (state.recipes) {
+      for (let index = 0; index < state.recipes.length; index += itemPerPages) {
+        let newArr = state.recipes.slice(index, index + itemPerPages)
+        tmpArr.push(newArr)
+      }
+      tmpArr.map((arr, i) => slicedRecipes[i + 1] = arr)
+    }
+    setState({ ...state, paginatedData: slicedRecipes })
+  }
+  useEffect(() => {
+    getRecipePerPage()
+  }, [state.currentPage])
+  
   return (
     <div className="container">
-      <Header searchitem={state.searchItem} onChange={handleChangeSearch} submit={handleSubmit} />
+      <Header searchitem={state.searchItem} onChange={handleChangeSearch} submit={handleSubmit} bookmarks={state.bookmarks} />
       {
         state.isLoading && <Spinner />
       }
       {
         (!state.isLoading && state.recipes) ?
-          <RecipeItems recipes={state.recipes} onChangeRecipe={handleChangeSingleRecipe} /> :
+
+          <>
+            <RecipeItems recipes={state.paginatedData[state.currentPage]}
+              onChangeRecipe={handleChangeSingleRecipe}
+              totalPages={state.totalPages}
+              currentPage={state.currentPage}
+              DecreasePage={handleDecrease}
+              IncreasePage={handleIncrease} />
+
+          </>
+          :
           <ShowMessage message={state.message} iconType={<AiOutlineWarning />} />
       }
       {
-        <RecipeDetail recipeId={state.singleRecipe && state.singleRecipe} />
+        <RecipeDetail recipeId={state.singleRecipe && state.singleRecipe} addToBookmarh={addBookmark} />
       }
     </div>
   );

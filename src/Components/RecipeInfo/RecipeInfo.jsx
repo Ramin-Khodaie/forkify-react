@@ -4,6 +4,11 @@ import Ingredients from '../Ingredients/Ingredients'
 import Spinner from '../Spinner/Spinner'
 
 const RecipeInfo = ({recipe,isLoading})=>{
+
+
+  const handleAddBookmark = () =>{
+    
+  }
     return(
         <>
         {isLoading && (
@@ -58,7 +63,7 @@ const RecipeInfo = ({recipe,isLoading})=>{
             <div className="recipe__user-generated">
               <BiUser />
             </div>
-            <button className="btn--round">
+            <button className="btn--round" onClick={handleAddBookmark}>
               <BiBookmark />
             </button>
           </div>

@@ -25,7 +25,7 @@ const AddRecipe = ({ showForms, closeForm }) => {
   };
 
   const AddIngredient = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     //generate randome number between 1 and 100 for ingredient's id
     const Id = Math.floor(Math.random(100) * 100) + 1;
     setState({
@@ -54,8 +54,6 @@ const AddRecipe = ({ showForms, closeForm }) => {
       serving: state.serving,
       title: state.title,
     };
-
-    console.log(877,uploadedIng);
   };
   return (
     <div className={`add-recipe-window ${showForms ? "" : "hidden"}`}>
@@ -121,7 +119,11 @@ const AddRecipe = ({ showForms, closeForm }) => {
               placeholder="Format: 'Quantity,Unit,Description'"
               onChange={handleChangeFormat}
             />
-            <button className="btn--add-ing" type="button" onClick={AddIngredient}>
+            <button
+              className="btn--add-ing"
+              type="button"
+              onClick={AddIngredient}
+            >
               <FaPlus />
             </button>
           </div>
@@ -153,7 +155,7 @@ const AddRecipe = ({ showForms, closeForm }) => {
                       {i + 1} - {ing.desc}
                     </p>
                     <button
-                    type="button"
+                      type="button"
                       onClick={DeleteIngredients(ing.id)}
                       style={{
                         background: "none",

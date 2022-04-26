@@ -14,7 +14,7 @@ import {
 import Ingredients from "../Ingredients/Ingredients";
 import ShowMessage from "../Message/ShowMessage";
 
-const RecipeDetail = ({ recipeId }) => {
+const RecipeDetail = ({ recipeId,addToBookmarh }) => {
   const [state, setState] = useState({
     recipeDetail: undefined,
     errorMessage: undefined,
@@ -24,6 +24,9 @@ const RecipeDetail = ({ recipeId }) => {
 
   const recipe = state.recipeDetail;
 
+  const handleAddBookmark = () =>{
+    addToBookmarh(state.recipeDetail)
+  }
   useEffect(() => {
     if (recipe !== undefined) {
       setState({ ...state, isLoading: true });
@@ -42,8 +45,7 @@ const RecipeDetail = ({ recipeId }) => {
           console.log(err);
         });
     }
-  }, [recipeId]);
-  console.log(555, state);
+  }, [recipeId]);  
   return (
     <div className="recipe">
       {recipe === undefined && !state.isLoading && (
@@ -101,7 +103,7 @@ const RecipeDetail = ({ recipeId }) => {
             <div className="recipe__user-generated">
               <BiUser />
             </div>
-            <button className="btn--round">
+            <button className="btn--round" onClick={handleAddBookmark}>
               <BiBookmark />
             </button>
           </div>

@@ -1,31 +1,27 @@
-import './Bookmark.scss'
-import {FaSmile} from 'react-icons/fa'
- 
-const Bookmark = () => {
-  return (
-    <div className="bookmarks">
-      <ul className="bookmarks__list">
-        <div className="message">
-          <div>
-           <FaSmile/>
-          </div>
-          <p>No bookmarks yet. Find a nice recipe and bookmark it :)</p>
-        </div>
+import "./Bookmark.scss";
+import { FaSmile } from "react-icons/fa";
+import RecipeItem from "../RecipeItems/RecipeItem/RecipeItem";
+import RecipeItems from "../RecipeItems/RecipeItems";
 
-        {/* <li className="preview">
-          <a className="preview__link" href="#23456">
-            <figure className="preview__fig">
-              <img src="src/img/test-1.jpg" alt="Test" />
-            </figure>
-            <div className="preview__data">
-              <h4 className="preview__name">Pasta with Tomato Cream ...</h4>
-              <p className="preview__author">The Pioneer Woman</p>
+const Bookmark = ({ show, bookmarks }) => {
+  if (show) {
+    return (
+      <div className="bookmarks" style={{ opacity: 1 }}>
+        {bookmarks.length === 0 && (
+          <div className="message">
+            <div>
+              <FaSmile />
             </div>
-          </a>
-        </li> */}
-      </ul>
-    </div>
-  );
+            <p>No bookmarks yet. Find a nice recipe and bookmark it :)</p>
+          </div>
+        )}
+
+        <RecipeItems recipes={bookmarks} />
+      </div>
+    );
+  } else {
+    return null;
+  }
 };
 
 export default Bookmark;

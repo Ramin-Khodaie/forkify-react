@@ -7,7 +7,7 @@ import Modal from "../Modal/Modal";
 import AddRecipe from "../AddRecipe/AddRecipe";
 import Bookmark from "../Bookmark/Bookmark";
 
-const Header = ({ searchitem, onChange, submit }) => {
+const Header = ({ searchitem, onChange, submit, bookmarks }) => {
   const [state, setState] = useState({
     showAddForm: false,
     showBookmark: false,
@@ -54,40 +54,12 @@ const Header = ({ searchitem, onChange, submit }) => {
               >
                 <BiBookmark className="nav__icon" />
                 <span>Bookmarks</span>
-              </button>
-              {/* <div class="bookmarks">
-                <ul class="bookmarks__list">
-                  <div class="message">
-                    <div>
-                      <svg>
-                        <use href="src/img/icons.svg#icon-smile"></use>
-                      </svg>
-                    </div>
-                    <p>
-                      No bookmarks yet. Find a nice recipe and bookmark it :)
-                    </p>
-                  </div>
-
-                  <!-- <li class="preview">
-                    <a class="preview__link" href="#23456">
-                      <figure class="preview__fig">
-                        <img src="src/img/test-1.jpg" alt="Test" />
-                      </figure>
-                      <div class="preview__data">
-                        <h4 class="preview__name">
-                          Pasta with Tomato Cream ...
-                        </h4>
-                        <p class="preview__publisher">The Pioneer Woman</p>
-                      </div>
-                    </a>
-                  </li> -->
-                </ul>
-              </div> */}
+              </button>              
             </li>
           </ul>
         </nav>
       </header>
-      {state.showBookmark && <Bookmark />}
+      {state.showBookmark && <Bookmark show={state.showBookmark} bookmarks={bookmarks}/>}
       {state.showAddForm && (
         <Modal show={state.showAddForm} closeBachdrops={handleBackdrop}>
           <AddRecipe showForms={state.showAddForm} closeForm={handleBackdrop} />
