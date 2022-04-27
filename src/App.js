@@ -7,7 +7,7 @@ import RecipeItems from './Components/RecipeItems/RecipeItems';
 import ShowMessage from './Components/Message/ShowMessage'
 import RecipeDetail from './Components/RecipeDetail/RecipeDetail';
 import { AiOutlineWarning } from 'react-icons/ai';
-import Pagination from './Components/Pagination/Pagination';
+
 
 function App() {
 
@@ -37,13 +37,16 @@ function App() {
     bxios.get(`/search?q=${state.searchItem}`).then(d => {
       if (d.status === 200) {
         const { count } = d.data
+        const {recipes} = d.data
         const totalPages = Math.ceil(count / itemPerPages);
+        const recipePerpage = getRecipePerPage(recipes);
         setState({
           ...state,
           searchItem: "",
           recipes: d.data.recipes,
           isLoading: false,
           totalPages: totalPages,
+          paginatedData: recipePerpage
         })
         return;
       }
@@ -76,24 +79,26 @@ function App() {
     setState({ ...state, bookmarks: [...state.bookmarks, bookmark] })
   }
 
-  const getRecipePerPage = () => {
-
+  const getRecipePerPage = (recipes) => {
+console.log(456,recipes)
     let tmpArr = []
     let slicedRecipes = {};
 
-    if (state.recipes) {
-      for (let index = 0; index < state.recipes.length; index += itemPerPages) {
-        let newArr = state.recipes.slice(index, index + itemPerPages)
+    if (recipes) {
+      for (let index = 0; index < recipes.length; index += itemPerPages) {
+        let newArr = recipes.slice(index, index + itemPerPages)
         tmpArr.push(newArr)
       }
       tmpArr.map((arr, i) => slicedRecipes[i + 1] = arr)
     }
-    setState({ ...state, paginatedData: slicedRecipes })
+    return slicedRecipes
   }
-  useEffect(() => {
-    getRecipePerPage()
-  }, [state.currentPage])
-  
+
+  // useEffect(() => {
+
+  //   setState({ ...state, paginatedData: recipePerpage })
+  // }, [state.currentPage])
+
   return (
     <div className="container">
       <Header searchitem={state.searchItem} onChange={handleChangeSearch} submit={handleSubmit} bookmarks={state.bookmarks} />
